@@ -1,0 +1,68 @@
+<header class="bg-white shadow">
+    <div class="mx-auto max-w-7xl px-8 sm:px-12 lg:px-16">
+        <div class="flex justify-between items-center h-16">
+            <!-- Logo -->
+            <div class="flex-shrink-0 flex items-center space-x-2">
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+                <!-- Alpine.js para slider del usuario -->
+                <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+                <div class="text-gray-800 font-bold text-xl">EndoRayo</div>
+            </div>
+
+            <!-- Navegación -->
+            <nav class="hidden md:flex space-x-6 text-sm text-gray-700">
+                <a href="/" class="hover:text-indigo-600 font-medium">Inicio</a>
+                <a href="#" class="hover:text-indigo-600 font-medium">Características</a>
+                <div class="relative group">
+                    <button class="flex items-center space-x-1 hover:text-indigo-600 font-medium">
+                        <span>Páginas</span>
+                        <svg class="w-4 h-4 mt-[1px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <!-- Aquí podrías agregar el dropdown si lo necesitas -->
+                </div>
+                <a href="#" class="hover:text-indigo-600 font-medium">Apoyo</a>
+            </nav>
+
+            <!-- Acciones -->
+            <div x-data="{ open: false }" class="flex items-center space-x-4">
+                {% if session['user_id'] %}
+                    <div class="flex items-center space-x-2">
+                        <div class="text-right">
+                            <div class="text-sm font-semibold text-gray-800">{{ session['name'] }} {{ session['lastname'] }}</div>
+                            <div class="text-xs text-gray-500">@{{ session['username'] }}</div>
+                        </div>
+                        <button @click="open = true" class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 border border-gray-300 transition focus:outline-none">
+                            <i class="fas fa-user text-gray-500 text-lg"></i>
+                        </button>
+                    </div>
+                    <!-- Slider lateral derecho -->
+                    <div x-show="open" x-cloak @click.away="open = false" @keydown.escape.window="open = false" class="fixed inset-0 z-40">
+                        <div class="absolute inset-0 bg-black opacity-30" @click="open = false"></div>
+                        <div class="fixed right-0 top-0 h-full w-72 bg-white shadow-lg z-50 flex flex-col p-8 transition-transform"
+                            x-transition:enter="transition transform duration-300"
+                            x-transition:enter-start="translate-x-full"
+                            x-transition:enter-end="translate-x-0"
+                            x-transition:leave="transition transform duration-200"
+                            x-transition:leave-start="translate-x-0"
+                            x-transition:leave-end="translate-x-full">
+                            <button @click="open = false" class="self-end text-gray-400 hover:text-gray-600 text-2xl mb-6">&times;</button>
+                            <div class="flex-1 flex flex-col justify-center items-center">
+                                <form method="POST" action="/logout">
+                                    <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg text-lg">Cerrar sesión</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="/login" class="text-sm text-gray-600 hover:text-indigo-600 font-medium">Iniciar sesión</a>
+                    <a href="/register"
+                        class="bg-green-600 hover:bg-green-700 text-white text-sm font-semibold px-4 py-2 rounded-full transition">
+                        Registrarse
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</header>

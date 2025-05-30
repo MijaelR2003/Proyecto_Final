@@ -1,0 +1,24 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="flex justify-center bg-gray-100 mt-20">
+    <div class="bg-white rounded-lg shadow-lg p-12 flex flex-col items-center max-w-3xl w-full">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-6">Resultado IA: Caries Detectadas</h2>
+        <div class="relative w-full flex justify-center">
+            <!-- Imagen radiografía con caries resaltadas -->
+            <img src="{{ url_for('static', filename=highlighted_img_path) }}" alt="Caries resaltadas" class="rounded-lg shadow-md max-w-full max-h-[500px] object-contain">
+            <!-- Puedes agregar overlays SVG si en el futuro quieres resaltar zonas específicas -->
+        </div>
+        <div class="mt-8 flex gap-4">
+            <a href="{{ url_for('main.patient_images', paciente_id=paciente_id) }}"
+               class="bg-yellow-400 text-gray-800 px-6 py-2 rounded-md font-semibold shadow hover:bg-gray-400 transition-colors duration-200">
+                Volver a imágenes
+            </a>
+            <a href="{{ url_for('main.image_detail', image_id=image_id, paciente_id=paciente_id) }}"
+               class="bg-yellow-400 text-gray-800 px-6 py-2 rounded-md font-semibold shadow hover:bg-gray-400 transition-colors duration-200">
+                Ver imagen original
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

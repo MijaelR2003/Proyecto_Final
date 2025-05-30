@@ -1,0 +1,127 @@
+{% extends 'layouts/base.html' %}
+{% block title %}Vista previa del reporte{% endblock %}
+{% block content %}
+<!-- DIAGNOSTICO: Este es el template de reporte_vista.html -->
+<div class="max-w-2xl mx-auto mt-10">
+    <div class="flex justify-between mb-4">
+        <a href="{{ url_for('main.reportes') }}" class="inline-block bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded font-semibold">← Volver</a>
+        <a href="{{ url_for('main.reporte_pdf', paciente_id=paciente.mod_pac_id) }}" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded font-semibold">Descargar PDF</a>
+    </div>
+    <div class="bg-white rounded shadow p-6 mb-6 border">
+        <h2 class="text-xl font-bold text-center mb-1">Consultorio EndoRayo</h2>
+        <p class="text-center text-gray-500 mb-4">Historia Clínica Odontológica</p>
+        <hr class="mb-6">
+        <h3 class="font-semibold mb-2">Datos del Paciente</h3>
+        <table class="w-full text-sm mb-4">
+            <tr>
+                <td class="font-semibold">Nombre y Apellido:</td>
+                <td>{{ paciente.mod_pac_nombre }} {{ paciente.mod_pac_apellido }}</td>
+            </tr>
+            <tr>
+                <td class="font-semibold">CI:</td>
+                <td>{{ paciente.mod_pac_ci }}</td>
+            </tr>
+            <tr>
+                <td class="font-semibold">Fecha de nacimiento:</td>
+                <td>{{ paciente.mod_pac_fecha_nacimiento }}</td>
+            </tr>
+            <tr>
+                <td class="font-semibold">Teléfono:</td>
+                <td>{{ paciente.mod_pac_telefono }}</td>
+            </tr>
+            <tr>
+                <td class="font-semibold">Email:</td>
+                <td>{{ paciente.mod_pac_email }}</td>
+            </tr>
+            <tr>
+                <td class="font-semibold">Dirección:</td>
+                <td>{{ paciente.mod_pac_direccion }}</td>
+            </tr>
+            <tr>
+                <td class="font-semibold">Observaciones:</td>
+                <td>{{ paciente.mod_pac_observaciones }}</td>
+            </tr>
+        </table>
+        {% if revision %}
+            <h3 class="font-semibold mb-2 mt-6">Datos de Revisión</h3>
+            <table class="w-full text-sm mb-4">
+                <tr>
+                    <td class="font-semibold">Dolor persistente:</td>
+                    <td>{{ 'Sí' if revision.mod_pac_rev_dolor_persistente else 'No' }}</td>
+                </tr>
+                <tr>
+                    <td class="font-semibold">Sensibilidad prolongada:</td>
+                    <td>{{ 'Sí' if revision.mod_pac_rev_sensibilidad_prolongada else 'No' }}</td>
+                </tr>
+                <tr>
+                    <td class="font-semibold">Hinchazón:</td>
+                    <td>{{ 'Sí' if revision.mod_pac_rev_hinchazon else 'No' }}</td>
+                </tr>
+                <tr>
+                    <td class="font-semibold">Fístula:</td>
+                    <td>{{ 'Sí' if revision.mod_pac_rev_fistula else 'No' }}</td>
+                </tr>
+                <tr>
+                    <td class="font-semibold">Cambio de color:</td>
+                    <td>{{ 'Sí' if revision.mod_pac_rev_cambio_color else 'No' }}</td>
+                </tr>
+                <tr>
+                    <td class="font-semibold">Dolor a la percusión:</td>
+                    <td>{{ 'Sí' if revision.mod_pac_rev_dolor_percusion else 'No' }}</td>
+                </tr>
+                <tr>
+                    <td class="font-semibold">Movilidad:</td>
+                    <td>{{ 'Sí' if revision.mod_pac_rev_movilidad else 'No' }}</td>
+                </tr>
+                <tr>
+                    <td class="font-semibold">Caries profunda:</td>
+                    <td>{{ 'Sí' if revision.mod_pac_rev_caries_profunda else 'No' }}</td>
+                </tr>
+                <tr>
+                    <td class="font-semibold">Lesión radiográfica:</td>
+                    <td>{{ 'Sí' if revision.mod_pac_rev_lesion_radiografica else 'No' }}</td>
+                </tr>
+                <tr>
+                    <td class="font-semibold">Observaciones:</td>
+                    <td>{{ revision.mod_pac_rev_observaciones }}</td>
+                </tr>
+                <tr>
+                    <td class="font-semibold">Fecha de revisión:</td>
+                    <td>{{ revision.mod_pac_rev_fecha }}</td>
+                </tr>
+            </table>
+        {% endif %}
+        <h3 class="font-semibold mb-2 mt-6">Radiografía principal</h3>
+        {% if imagen_principal %}
+            <img src="{{ url_for('static', filename=imagen_principal) }}" alt="Radiografía del paciente" class="w-full max-w-md rounded shadow mb-4">
+        {% else %}
+            <p class="text-gray-400 italic">No hay radiografía registrada para este paciente.</p>
+        {% endif %}
+    </div>
+</div>
+<!-- Script robusto para ocultar footer -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        function hideFooter() {
+            var footer = document.getElementById("footer");
+            console.log("Buscando footer nativo...", footer);
+            if (footer) {
+                footer.style.display = "none";
+                console.log("Footer oculto!");
+                return true;
+            }
+            return false;
+        }
+        if (!hideFooter()) {
+            const observer = new MutationObserver(function(mutations, obs) {
+                if (hideFooter()) {
+                    obs.disconnect();
+                }
+            });
+            observer.observe(document.body, { childList: true, subtree: true });
+        }
+    });
+</script>
+{% endblock %}
+
+

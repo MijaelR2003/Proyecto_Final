@@ -1,0 +1,25 @@
+<footer class="bg-white py-6 mt-10 absolute bottom-0 left-0 w-full shadow-md" id="footer">
+    <div class="max-w-7xl mx-auto px-6 sm:px-8">
+        <div class="flex justify-center items-center">
+            <!-- Enlaces de redes sociales -->
+            <div class="space-x-12"> <!-- Espacio más equilibrado entre los íconos -->
+                <!-- Ícono de casa -->
+                <a href="/" class="text-xl transition duration-300 px-2 py-1 rounded-md text-gray-600 hover:text-yellow-500">
+    <i class="fas fa-home text-3xl {% if request.path == '/' %}text-yellow-500{% endif %}"></i>
+</a>
+                <!-- Ícono de pacientes -->
+                <a href="/pacientes" class="text-xl transition duration-300 px-2 py-1 rounded-md text-gray-600 hover:text-yellow-500">
+    <i class="fas fa-users text-3xl {% if request.path.startswith('/pacientes') or request.path.startswith('/paciente') %}text-yellow-500{% endif %}"></i>
+</a>
+                <!-- Ícono de reportes -->
+                <a href="/reportes" class="text-xl transition duration-300 px-2 py-1 rounded-md text-gray-600 hover:text-yellow-500">
+    <i class="fas fa-file-alt text-3xl {% if request.path.startswith('/reportes') %}text-yellow-500{% endif %}"></i>
+</a>
+                <!-- Ícono de persona -->
+                <a href="/perfil" class="text-xl transition duration-300 px-2 py-1 rounded-md text-gray-600 hover:text-yellow-500">
+    <i class="fas fa-user text-3xl {% if request.path.startswith('/perfil') %}text-yellow-500{% endif %}"></i>
+</a>
+            </div>
+        </div>
+    </div>
+</footer>

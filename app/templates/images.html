@@ -1,0 +1,85 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Buscar Imágenes{% endblock %}
+
+{% block content %}
+<!-- Mensajes flash -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div>
+      {% for message in messages %}
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-2">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Encabezado con título y botón "Guardar Imagen" -->
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-semibold text-gray-800">Imágenes Guardadas</h2>
+        <button class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700" onclick="window.location.href = '{{ url_for('main.uploadImage', paciente_id=paciente_id) }}'">
+            Guardar Imagen
+        </button>   
+    </div>
+
+    <!-- Tabla de imágenes -->
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
+            <thead>
+                <tr class="bg-gray-100 text-left">
+                    <th class="px-4 py-2 text-sm font-medium text-gray-700 border-b">ID</th>
+                    <th class="px-4 py-2 text-sm font-medium text-gray-700 border-b">Imagen</th>
+                    <th class="px-4 py-2 text-sm font-medium text-gray-700 border-b">Nombre</th>
+                    <th class="px-4 py-2 text-sm font-medium text-gray-700 border-b">Fecha</th>
+                    <th class="px-4 py-2 text-sm font-medium text-gray-700 border-b">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for image in images %}
+                <tr class="border-b">
+                    <!-- Columna ID -->
+                    <td class="px-4 py-2 text-sm text-gray-700">{{ image.mod_img_id }}</td>
+                    
+                    <!-- Columna Imagen -->
+                    <td class="px-4 py-2 text-sm text-gray-700">
+                        <img src="{{ url_for('static', filename=image.mod_img_path) }}" alt="{{ image.mod_img_name }}" class="w-16 h-16 object-cover rounded-md">
+                    </td>
+                    
+                    <!-- Columna Nombre -->
+                    <td class="px-4 py-2 text-sm text-gray-700">{{ image.mod_img_name }}</td>
+                    
+                    <!-- Columna Fecha -->
+                    <td class="px-4 py-2 text-sm text-gray-700">{{ image.mod_img_date }}</td>
+                    
+                    <!-- Columna Acciones -->
+                    <td class="px-4 py-2 text-sm text-gray-700">
+                        <!-- Botón Ver Detalle -->
+                        <a href="{{ url_for('main.image_detail', image_id=image.mod_img_id) }}" class="text-blue-600 hover:text-blue-800">
+                            <i class="fas fa-eye"></i> Ver detalle
+                        </a>
+                        
+                        <!-- Botón Eliminar -->
+                        <form action="{{ url_for('main.delete_image', image_id=image.mod_img_id) }}" method="POST" class="inline" onsubmit="return confirmDelete();">
+                            <button type="submit" class="text-red-600 hover:text-red-800 ml-4">
+                                <i class="fas fa-trash-alt"></i> Eliminar
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function confirmDelete() {
+        return confirm("¿Estás seguro de eliminar esta imagen?");
+    }
+</script>
+
+{% endblock %}

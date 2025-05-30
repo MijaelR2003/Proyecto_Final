@@ -1,0 +1,60 @@
+# Entornos virtuales
+venv/
+
+# Cachés de Python
+__pycache__/
+**/__pycache__/
+
+# Archivos de configuración sensibles
+.env
+
+# Ignorar archivos de datasets y carpetas relacionadas
+dataset/
+datasets/
+data/
+ia/dataset_yolo/
+ia/datasets/
+ia/dental_radiography/
+ia/panoramic_dental_dataset/
+ia/panoramic_dental_xray_dataset/
+ia/media/
+
+# Ignorar archivos de imágenes
+data/*.jpg
+data/*.jpeg
+data/*.png
+data/*.gif
+data/*.bmp
+data/*.tiff
+data/*.ico
+data/*.svg
+data/*.webp
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.tiff
+*.ico
+*.svg
+*.webp
+
+# Ignorar archivos grandes y comprimidos que puedan contener datasets
+*.zip
+*.rar
+*.7z
+*.tar
+*.gz
+
+# Archivos de modelos
+*.h5
+*.keras
+
+# Otros archivos temporales
+*.tmp
+*.log
+*.swp
+
+# Otros
+.idea/
+.vscode/
