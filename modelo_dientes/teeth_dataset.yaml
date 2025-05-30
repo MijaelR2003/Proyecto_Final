@@ -1,0 +1,11 @@
+
+# Dataset configuration for Teeth Detection (Phase 1)
+path: /content/teeth_dataset  # dataset root dir
+train: images/train  # train images (relative to 'path')
+val: images/val  # val images (relative to 'path')
+
+# Classes - Solo dientes en Fase 1
+names:
+  0: tooth  # Diente (segmentación completa)
+
+nc: 1  # number of classes

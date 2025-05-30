@@ -18,6 +18,7 @@ ia/dental_radiography/
 ia/panoramic_dental_dataset/
 ia/panoramic_dental_xray_dataset/
 ia/media/
+modelo_dientes/
 
 # Ignorar archivos de imágenes
 data/*.jpg
