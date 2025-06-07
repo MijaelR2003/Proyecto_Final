@@ -1,25 +1,30 @@
-<footer class="bg-white py-6 mt-10 absolute bottom-0 left-0 w-full shadow-md" id="footer">
+<footer class="bg-white py-6 w-full shadow-md border-t border-gray-200" id="footer">
     <div class="max-w-7xl mx-auto px-6 sm:px-8">
         <div class="flex justify-center items-center">
-            <!-- Enlaces de redes sociales -->
-            <div class="space-x-12"> <!-- Espacio más equilibrado entre los íconos -->
+            <!-- Enlaces de navegación en el footer -->
+            <div class="space-x-12"> <!-- Espacio equilibrado entre los iconos (ajustado para 4 iconos) -->
                 <!-- Ícono de casa -->
-                <a href="/" class="text-xl transition duration-300 px-2 py-1 rounded-md text-gray-600 hover:text-yellow-500">
-    <i class="fas fa-home text-3xl {% if request.path == '/' %}text-yellow-500{% endif %}"></i>
-</a>
+                <a href="{{ url_for('main.index') }}" class="text-xl transition duration-300 px-2 py-1 rounded-md text-gray-600 hover:text-indigo-600">
+                    <i class="fas fa-home text-3xl {% if request.path == '/' %}text-indigo-600{% endif %}"></i>
+                </a>
                 <!-- Ícono de pacientes -->
-                <a href="/pacientes" class="text-xl transition duration-300 px-2 py-1 rounded-md text-gray-600 hover:text-yellow-500">
-    <i class="fas fa-users text-3xl {% if request.path.startswith('/pacientes') or request.path.startswith('/paciente') %}text-yellow-500{% endif %}"></i>
-</a>
+                <a href="{{ url_for('main.patient_list') }}" class="text-xl transition duration-300 px-2 py-1 rounded-md text-gray-600 hover:text-indigo-600">
+                    <i class="fas fa-users text-3xl {% if request.path.startswith('/pacientes') %}text-indigo-600{% endif %}"></i>
+                </a>
                 <!-- Ícono de reportes -->
-                <a href="/reportes" class="text-xl transition duration-300 px-2 py-1 rounded-md text-gray-600 hover:text-yellow-500">
-    <i class="fas fa-file-alt text-3xl {% if request.path.startswith('/reportes') %}text-yellow-500{% endif %}"></i>
-</a>
-                <!-- Ícono de persona -->
-                <a href="/perfil" class="text-xl transition duration-300 px-2 py-1 rounded-md text-gray-600 hover:text-yellow-500">
-    <i class="fas fa-user text-3xl {% if request.path.startswith('/perfil') %}text-yellow-500{% endif %}"></i>
-</a>
+                <a href="{{ url_for('main.reportes') }}" class="text-xl transition duration-300 px-2 py-1 rounded-md text-gray-600 hover:text-indigo-600">
+                    <i class="fas fa-file-alt text-3xl {% if request.path.startswith('/reportes') %}text-indigo-600{% endif %}"></i>
+                </a>
+                <!-- Ícono de historial clínico -->
+                <a href="{{ url_for('main.historial_clinico_general') }}" class="text-xl transition duration-300 px-2 py-1 rounded-md text-gray-600 hover:text-indigo-600">
+                    <i class="fas fa-notes-medical text-3xl {% if request.path.startswith('/historial-clinico') %}text-indigo-600{% endif %}"></i>
+                </a>
             </div>
+        </div>
+        
+        <!-- Línea separadora y copyright -->
+        <div class="text-center text-gray-500 text-sm mt-4">
+            <p>© {{ now.year if now else '2025' }} Dental AI Detection. Todos los derechos reservados.</p>
         </div>
     </div>
 </footer>

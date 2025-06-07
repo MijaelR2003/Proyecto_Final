@@ -1,66 +1,106 @@
 <header class="bg-white shadow">
-    <div class="mx-auto max-w-7xl px-8 sm:px-12 lg:px-16">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
             <!-- Logo -->
             <div class="flex-shrink-0 flex items-center space-x-2">
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
                 <!-- Alpine.js para slider del usuario -->
                 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-                <div class="text-gray-800 font-bold text-xl">EndoRayo</div>
+                <div class="text-gray-800 font-bold text-xl flex items-center">
+                    <i class="fas fa-tooth text-indigo-600 mr-2"></i>
+                    <span>San Isidro</span>
+                </div>
             </div>
 
-            <!-- Navegación -->
-            <nav class="hidden md:flex space-x-6 text-sm text-gray-700">
-                <a href="/" class="hover:text-indigo-600 font-medium">Inicio</a>
-                <a href="#" class="hover:text-indigo-600 font-medium">Características</a>
-                <div class="relative group">
-                    <button class="flex items-center space-x-1 hover:text-indigo-600 font-medium">
-                        <span>Páginas</span>
-                        <svg class="w-4 h-4 mt-[1px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </button>
-                    <!-- Aquí podrías agregar el dropdown si lo necesitas -->
-                </div>
-                <a href="#" class="hover:text-indigo-600 font-medium">Apoyo</a>
-            </nav>
-
-            <!-- Acciones -->
-            <div x-data="{ open: false }" class="flex items-center space-x-4">
+            <!-- Navegación principal - solo los enlaces esenciales -->
+            <nav class="hidden md:flex space-x-6 text-sm font-medium text-gray-700">
+                <a href="/" class="hover:text-indigo-600 transition-colors flex items-center">
+                    <i class="fas fa-home mr-1"></i> Inicio
+                </a>
                 {% if session['user_id'] %}
-                    <div class="flex items-center space-x-2">
-                        <div class="text-right">
+                <a href="{{ url_for('main.patient_list') }}" class="hover:text-indigo-600 transition-colors flex items-center">
+                    <i class="fas fa-user-group mr-1"></i> Pacientes
+                </a>
+                {% endif %}
+
+            </nav>
+            
+            <!-- Acciones de usuario -->
+            <div x-data="{ open: false }" class="flex items-center">
+                {% if session['user_id'] %}
+                    <div class="flex items-center space-x-3">
+                        <div class="hidden md:block text-right">
                             <div class="text-sm font-semibold text-gray-800">{{ session['name'] }} {{ session['lastname'] }}</div>
                             <div class="text-xs text-gray-500">@{{ session['username'] }}</div>
                         </div>
-                        <button @click="open = true" class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 border border-gray-300 transition focus:outline-none">
-                            <i class="fas fa-user text-gray-500 text-lg"></i>
+                        <button @click="open = true" class="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-100 hover:bg-indigo-200 border border-indigo-200 transition focus:outline-none">
+                            <i class="fas fa-user text-indigo-600 text-lg"></i>
                         </button>
                     </div>
-                    <!-- Slider lateral derecho -->
+                    
+                    <!-- Panel lateral de usuario -->
                     <div x-show="open" x-cloak @click.away="open = false" @keydown.escape.window="open = false" class="fixed inset-0 z-40">
                         <div class="absolute inset-0 bg-black opacity-30" @click="open = false"></div>
-                        <div class="fixed right-0 top-0 h-full w-72 bg-white shadow-lg z-50 flex flex-col p-8 transition-transform"
+                        <div class="fixed right-0 top-0 h-full w-80 bg-white shadow-2xl z-50 flex flex-col transition-transform"
                             x-transition:enter="transition transform duration-300"
                             x-transition:enter-start="translate-x-full"
                             x-transition:enter-end="translate-x-0"
                             x-transition:leave="transition transform duration-200"
                             x-transition:leave-start="translate-x-0"
                             x-transition:leave-end="translate-x-full">
-                            <button @click="open = false" class="self-end text-gray-400 hover:text-gray-600 text-2xl mb-6">&times;</button>
-                            <div class="flex-1 flex flex-col justify-center items-center">
+                            
+                            <!-- Encabezado del panel -->
+                            <div class="p-6 border-b border-gray-200">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h3 class="text-xl font-bold text-gray-800">Mi Perfil</h3>
+                                    <button @click="open = false" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+                                </div>
+                                
+                                <!-- Información del usuario -->
+                                <div class="flex items-center space-x-3 mb-2">
+                                    <div class="w-16 h-16 rounded-full bg-indigo-600 flex items-center justify-center text-2xl text-white font-bold">
+                                        {{ session['name'][0] }}{{ session['lastname'][0] }}
+                                    </div>
+                                    <div>
+                                        <div class="text-lg font-bold text-gray-800">{{ session['name'] }} {{ session['lastname'] }}</div>
+                                        <div class="text-sm text-gray-500">@{{ session['username'] }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Enlaces de navegación -->
+                            <div class="flex-1 p-6 overflow-y-auto">
+                                <nav class="space-y-2">
+                                    <a href="/" class="block w-full py-2 px-4 rounded text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition flex items-center">
+                                        <i class="fas fa-home w-6 text-indigo-500"></i> Inicio
+                                    </a>
+                                    <a href="{{ url_for('main.patient_list') }}" class="block w-full py-2 px-4 rounded text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition flex items-center">
+                                        <i class="fas fa-user-group w-6 text-indigo-500"></i> Mis Pacientes
+                                    </a>
+                                </nav>
+                            </div>
+                            
+                            <!-- Botones de acción -->
+                            <div class="p-6 border-t border-gray-200">
                                 <form method="POST" action="/logout">
-                                    <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg text-lg">Cerrar sesión</button>
+                                    <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg text-lg flex items-center justify-center">
+                                        <i class="fas fa-sign-out-alt mr-2"></i>
+                                        Cerrar sesión
+                                    </button>
                                 </form>
                             </div>
                         </div>
                     </div>
                 {% else %}
-                    <a href="/login" class="text-sm text-gray-600 hover:text-indigo-600 font-medium">Iniciar sesión</a>
-                    <a href="/register"
-                        class="bg-green-600 hover:bg-green-700 text-white text-sm font-semibold px-4 py-2 rounded-full transition">
-                        Registrarse
-                    </a>
+                    <div class="flex items-center space-x-3">
+                        <a href="/login" class="text-sm text-white hover:text-yellow-300 font-medium transition-colors flex items-center">
+                            <i class="fas fa-sign-in-alt mr-1"></i> Iniciar sesión
+                        </a>
+                        <a href="/register"
+                            class="bg-yellow-500 hover:bg-yellow-400 text-blue-900 text-sm font-semibold px-5 py-2 rounded-md transition flex items-center">
+                            <i class="fas fa-user-plus mr-1"></i> Registrarse
+                        </a>
+                    </div>
                 {% endif %}
             </div>
         </div>

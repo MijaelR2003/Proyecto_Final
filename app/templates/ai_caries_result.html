@@ -1,23 +1,215 @@
 {% extends "layouts/base.html" %}
 
 {% block content %}
-<div class="flex justify-center bg-gray-100 mt-20">
-    <div class="bg-white rounded-lg shadow-lg p-12 flex flex-col items-center max-w-3xl w-full">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-6">Resultado IA: Caries Detectadas</h2>
-        <div class="relative w-full flex justify-center">
-            <!-- Imagen radiografía con caries resaltadas -->
-            <img src="{{ url_for('static', filename=highlighted_img_path) }}" alt="Caries resaltadas" class="rounded-lg shadow-md max-w-full max-h-[500px] object-contain">
-            <!-- Puedes agregar overlays SVG si en el futuro quieres resaltar zonas específicas -->
-        </div>
-        <div class="mt-8 flex gap-4">
-            <a href="{{ url_for('main.patient_images', paciente_id=paciente_id) }}"
-               class="bg-yellow-400 text-gray-800 px-6 py-2 rounded-md font-semibold shadow hover:bg-gray-400 transition-colors duration-200">
-                Volver a imágenes
-            </a>
-            <a href="{{ url_for('main.image_detail', image_id=image_id, paciente_id=paciente_id) }}"
-               class="bg-yellow-400 text-gray-800 px-6 py-2 rounded-md font-semibold shadow hover:bg-gray-400 transition-colors duration-200">
-                Ver imagen original
-            </a>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h2 class="mb-0">Análisis de Radiografía Dental</h2>
+                    <span class="badge badge-light">IA Asistida</span>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <h4 class="mb-3">Imagen Analizada</h4>
+                            <div class="position-relative">
+                                <img src="{{ url_for('static', filename=highlighted_img_path) }}" class="img-fluid rounded shadow-sm" alt="Radiografía con detecciones">
+                                <div class="mt-2 text-center">
+                                    <span class="badge badge-info">Las áreas marcadas indican detecciones de la IA</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="card bg-light mb-3">
+                                <div class="card-header bg-info text-white">
+                                    <h4 class="mb-0">Resumen del Análisis</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="text-center mb-3">
+                                        <div class="display-4 font-weight-bold">{{ num_dientes }}</div>
+                                        <div class="text-muted">dientes detectados</div>
+                                    </div>
+                                    
+                                    <div class="alert {% if num_dientes > 0 %}alert-success{% else %}alert-warning{% endif %} d-flex align-items-center">
+                                        {% if num_dientes > 0 %}
+                                            <i class="fas fa-check-circle mr-2"></i>
+                                            <div>Detección exitosa</div>
+                                        {% else %}
+                                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                                            <div>No se detectaron dientes</div>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <hr>
+                                    
+                                    <h5>Hallazgos detectados:</h5>
+                                    <ul class="list-group list-group-flush mb-3">
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span>Caries detectadas</span>
+                                            <span class="badge badge-danger badge-pill">{{ num_dientes }}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span>Nivel de severidad</span>
+                                            <span class="badge badge-warning badge-pill">Moderado</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sección informativa sobre hallazgos -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <ul class="nav nav-tabs" id="infoTabs" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="what-tab" data-toggle="tab" href="#what" role="tab">¿Qué son?</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="why-tab" data-toggle="tab" href="#why" role="tab">Causas</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="treatment-tab" data-toggle="tab" href="#treatment" role="tab">Tratamiento</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="prevention-tab" data-toggle="tab" href="#prevention" role="tab">Prevención</a>
+                                </li>
+                            </ul>
+                            
+                            <div class="tab-content p-3 border border-top-0 rounded-bottom" id="infoTabsContent">
+                                <div class="tab-pane fade show active" id="what" role="tabpanel">
+                                    <h4>¿Qué son las caries dentales?</h4>
+                                    <p>Las caries dentales son áreas dañadas permanentemente en la superficie de los dientes que se convierten en pequeñas aberturas u orificios. Son causadas por una combinación de factores, como bacterias en la boca, consumo frecuente de alimentos azucarados y mala higiene dental.</p>
+                                    <p>En una radiografía dental, las caries aparecen como áreas más oscuras o radiolúcidas dentro de la estructura del diente, ya que el tejido afectado es menos denso que el esmalte sano.</p>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="card mb-3">
+                                                <div class="card-header bg-light">Características de las caries en radiografías</div>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">Zonas oscuras en el esmalte o la dentina</li>
+                                                    <li class="list-group-item">Bordes irregulares y difusos</li>
+                                                    <li class="list-group-item">Contraste con el tejido dental sano</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="tab-pane fade" id="why" role="tabpanel">
+                                    <h4>Causas de las caries dentales</h4>
+                                    <p>Las caries son el resultado de un proceso que involucra varios factores:</p>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="card mb-3">
+                                                <div class="card-header bg-light">Factores principales</div>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item"><strong>Placa bacteriana:</strong> Película pegajosa de bacterias que se forma sobre los dientes</li>
+                                                    <li class="list-group-item"><strong>Consumo de azúcares:</strong> Alimentos y bebidas con alto contenido de azúcares</li>
+                                                    <li class="list-group-item"><strong>Deficiente higiene oral:</strong> No cepillarse o usar hilo dental regularmente</li>
+                                                    <li class="list-group-item"><strong>Flujo salival reducido:</strong> Saliva insuficiente para lavar residuos</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card">
+                                                <div class="card-header bg-light">Proceso de formación</div>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">1. Las bacterias convierten los azúcares en ácidos</li>
+                                                    <li class="list-group-item">2. Los ácidos desmineralizan el esmalte dental</li>
+                                                    <li class="list-group-item">3. Se forma una cavidad inicial (mancha blanca)</li>
+                                                    <li class="list-group-item">4. La caries progresa hacia la dentina si no se trata</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="tab-pane fade" id="treatment" role="tabpanel">
+                                    <h4>Opciones de tratamiento</h4>
+                                    <p>El tratamiento depende de la gravedad de la caries y puede incluir:</p>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="card mb-3">
+                                                <div class="card-header bg-light">Caries incipientes</div>
+                                                <div class="card-body">
+                                                    <p><strong>Fluoración profesional:</strong> Aplicación de fluoruro que ayuda a remineralizar el esmalte.</p>
+                                                    <p><strong>Selladores dentales:</strong> Recubrimiento protector que se aplica a los surcos de las muelas.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card mb-3">
+                                                <div class="card-header bg-light">Caries moderadas</div>
+                                                <div class="card-body">
+                                                    <p><strong>Empastes (obturaciones):</strong> Se elimina el tejido cariado y se rellena con un material como composite o amalgama.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="card mb-3">
+                                                <div class="card-header bg-light">Caries avanzadas</div>
+                                                <div class="card-body">
+                                                    <p><strong>Coronas dentales:</strong> Cuando la caries ha destruido gran parte del diente.</p>
+                                                    <p><strong>Endodoncia (tratamiento de conducto):</strong> Cuando la caries llega a la pulpa del diente.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card">
+                                                <div class="card-header bg-light">Casos severos</div>
+                                                <div class="card-body">
+                                                    <p><strong>Extracción dental:</strong> En casos donde el diente está severamente dañado y no puede ser restaurado.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="tab-pane fade" id="prevention" role="tabpanel">
+                                    <h4>Prevención de caries</h4>
+                                    <p>La prevención es clave para mantener una buena salud dental. Aquí hay algunas recomendaciones:</p>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="card mb-3">
+                                                <div class="card-header bg-light">Hábitos diarios</div>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">Cepillarse los dientes al menos dos veces al día con pasta con flúor</li>
+                                                    <li class="list-group-item">Usar hilo dental diariamente</li>
+                                                    <li class="list-group-item">Limitar el consumo de alimentos y bebidas azucaradas</li>
+                                                    <li class="list-group-item">Evitar picar entre comidas</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card">
+                                                <div class="card-header bg-light">Cuidado profesional</div>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">Visitar al dentista regularmente (cada 6 meses)</li>
+                                                    <li class="list-group-item">Realizar limpiezas profesionales</li>
+                                                    <li class="list-group-item">Aplicaciones de flúor profesional si es necesario</li>
+                                                    <li class="list-group-item">Solicitar selladores dentales para los niños</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Botones de navegación -->
+                    <div class="mt-4 text-center">
+                        <a href="{{ url_for('main.image_detail', image_id=image_id, paciente_id=paciente_id) }}" class="btn btn-primary">Ver imagen original</a>
+                        <a href="{{ url_for('main.patient_images', paciente_id=paciente_id) }}" class="btn btn-secondary">Volver a imágenes</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -1,20 +1,46 @@
 {% extends "layouts/base.html" %}
 
 {% block content %}
-<div class="flex justify-center bg-gray-100 mt-20">
-    <div class="bg-white rounded-lg shadow-lg p-12 flex flex-row items-center max-w-6xl w-full">
-        <!-- Imagen más grande a la izquierda -->
-        <div class="flex-shrink-0 flex justify-center items-center w-2/3 relative">
-    <div class="relative inline-block">
-    <img id="main-image" src="{{ url_for('static', filename=image.mod_img_path) }}" alt="Imagen dental"
-        class="rounded-lg shadow-md mx-auto" style="max-width:600px; max-height:500px; width:auto; height:auto; object-fit:contain; display:block;">
-    <!-- Botón pantalla completa encima de la imagen -->
-    <button type="button" onclick="fullscreenImage()" title="Ver en pantalla completa"
-        class="absolute bottom-4 right-4 bg-white bg-opacity-80 rounded p-2 shadow hover:bg-yellow-300 transition-colors z-20">
-        <i class="fas fa-expand fa-lg text-gray-700"></i>
-    </button>
-</div>
-</div>
+<div class="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-10 px-4 sm:px-6">
+    <!-- Encabezado con título y botón de volver -->
+    <div class="max-w-7xl mx-auto mb-8">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">{{ image.mod_img_name }}</h1>
+                <p class="text-gray-600 flex items-center gap-1 mt-1">
+                    <i class="far fa-calendar-alt"></i>
+                    <span>{{ image.mod_img_date }}</span>
+                </p>
+            </div>
+            <a href="{{ url_for('main.patient_images', paciente_id=paciente_id) }}"
+               class="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg transition-colors shadow-sm border border-gray-300">
+                <i class="fas fa-arrow-left mr-2"></i>Volver a imágenes
+            </a>
+        </div>
+    </div>
+    
+    <!-- Contenedor principal -->
+    <div class="max-w-7xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+        <!-- Contenedor de la imagen con botones -->
+        <div class="grid grid-cols-1 md:grid-cols-4">
+            <!-- Imagen ocupando 75% del espacio disponible -->
+            <div class="col-span-3 relative bg-gray-900 flex items-center justify-center">
+                <div class="relative w-full h-[70vh] flex items-center justify-center p-4">
+                    <!-- Imagen principal optimizada para verse grande -->
+                    <img id="main-image" 
+                         src="{{ url_for('static', filename=image.mod_img_path) }}" 
+                         alt="{{ image.mod_img_name }}" 
+                         class="max-h-full max-w-full object-contain shadow-lg transition-transform duration-300 hover:scale-[1.02]">
+                    
+                    <!-- Controles de imagen superpuestos -->
+                    <div class="absolute bottom-6 right-6 flex space-x-2">
+                        <button type="button" onclick="fullscreenImage()" 
+                                class="bg-white bg-opacity-90 hover:bg-opacity-100 text-gray-800 p-3 rounded-full shadow-md hover:shadow-lg transition-all">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
 <script>
 // Solo pantalla completa simple
 function fullscreenImage() {
@@ -28,26 +54,223 @@ function fullscreenImage() {
     }
 }
 </script>
-        <!-- Info y botones a la derecha -->
-        <div class="w-1/3 flex flex-col justify-between h-full pl-12">
-            <div>
-                <h2 class="text-2xl font-semibold text-gray-800 mb-2">{{ image.mod_img_name }}</h2>
-                <p class="text-gray-600 mb-8">Fecha de subida: {{ image.mod_img_date }}</p>
+            <!-- Panel lateral con información y acciones (25% del ancho) -->
+            <div class="col-span-1 p-6 bg-white flex flex-col justify-between">
+                <!-- Sección de información -->
+                <div class="space-y-6">
+                    <div>
+                        <h2 class="text-lg font-medium text-gray-900 border-b border-gray-200 pb-2">Información</h2>
+                        <div class="mt-3 space-y-3">
+                            <div>
+                                <span class="text-sm text-gray-500 block">Nombre del archivo</span>
+                                <span class="text-gray-800 font-medium">{{ image.mod_img_name }}</span>
+                            </div>
+                            <div>
+                                <span class="text-sm text-gray-500 block">Fecha de carga</span>
+                                <span class="text-gray-800 font-medium">{{ image.mod_img_date }}</span>
+                            </div>
+                            <div class="pt-4">
+                                <span class="text-sm text-gray-500 block mb-1">ID de la imagen</span>
+                                <span class="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full">#{{ image.mod_img_id }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sección de acciones -->
+                <div class="pt-6">
+                    <h3 class="text-sm font-medium text-gray-500 mb-3">ACCIONES DISPONIBLES</h3>
+                    <div class="space-y-3">
+                        <button id="btnVerConIA" onclick="iniciarAnalisisIA()" 
+                                class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white py-3 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200">
+                            <i class="fas fa-brain"></i>
+                            <span>Analizar con IA</span>
+                        </button>
+                        
+                        <form action="{{ url_for('main.delete_image', image_id=image.mod_img_id) }}" method="POST" onsubmit="return confirmDelete();">
+                            <button type="submit" class="w-full flex items-center justify-center gap-2 bg-white hover:bg-red-50 text-red-600 border border-red-200 py-3 px-4 rounded-lg transition-colors duration-200">
+                                <i class="fas fa-trash-alt"></i>
+                                <span>Eliminar imagen</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div class="flex gap-4 mt-auto">
-    <a href="{{ url_for('main.patient_images', paciente_id=paciente_id) }}"
-       class="bg-yellow-400 text-gray-800 px-6 py-2 rounded-md font-semibold shadow hover:bg-gray-400 transition-colors duration-200">
-        Volver
-    </a>
-    <a href="{{ url_for('main.ia_caries_result', image_id=image.mod_img_id, paciente_id=paciente_id) }}" class="bg-yellow-400 text-gray-800 px-6 py-2 rounded-md font-semibold shadow hover:bg-gray-400 transition-colors duration-200">
-        Ver con la IA
-    </a>
-    <!--<a href="{{ url_for('main.patient_form', image_id=image.mod_img_id) }}"
-       class="bg-yellow-400 text-gray-800 px-6 py-2 rounded-md font-semibold shadow hover:bg-gray-400 transition-colors duration-200">
-        Registrar/Ver Pacientes
-    </a>-->
-            </div>
-        </div>  
+        </div>
     </div>
+
+    <!-- Modal de carga con diseño mejorado -->
+    <div id="loadingModal" class="fixed inset-0 bg-gray-900 bg-opacity-90 backdrop-blur-sm z-50 flex items-center justify-center hidden transition-opacity duration-300">
+        <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full mx-4 transform transition-transform duration-500 scale-95 opacity-0" id="modalContent">
+            <!-- Cabecera con icono de IA -->
+            <div class="text-center mb-6">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-600 mb-4">
+                    <i class="fas fa-brain text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800">Analizando radiografía dental</h3>
+                <p class="text-gray-500 text-sm mt-1">Nuestro modelo de IA está procesando su imagen</p>
+            </div>
+            
+            <!-- Barra de progreso animada -->
+            <div class="relative pt-1 mb-8">
+                <div class="overflow-hidden h-2 mb-2 text-xs flex rounded-full bg-gray-200">
+                    <div id="progressBar" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-gradient-to-r from-blue-500 to-indigo-600 transition-all duration-500 rounded-full" style="width: 0%"></div>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600 text-xs" id="progressPercent">0%</span>
+                    <span class="text-gray-600 text-sm font-medium" id="loadingText">Iniciando análisis...</span>
+                </div>
+            </div>
+            
+            <!-- Pasos del análisis con iconos animados -->
+            <div class="space-y-4 mb-6">
+                <div class="flex items-center">
+                    <div class="h-8 w-8 rounded-full flex items-center justify-center bg-gray-100" id="step1Icon">
+                        <i class="fas fa-cog text-gray-400 animate-spin" id="step1Spinner"></i>
+                        <i class="fas fa-check text-green-500 hidden" id="step1Check"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-gray-900">Cargando modelo</p>
+                        <p class="text-xs text-gray-500" id="step1Status">Preparando...</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center">
+                    <div class="h-8 w-8 rounded-full flex items-center justify-center bg-gray-100" id="step2Icon">
+                        <i class="fas fa-cog text-gray-400 hidden" id="step2Spinner"></i>
+                        <i class="fas fa-check text-green-500 hidden" id="step2Check"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-gray-900">Procesando radiografía</p>
+                        <p class="text-xs text-gray-500" id="step2Status">En espera...</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center">
+                    <div class="h-8 w-8 rounded-full flex items-center justify-center bg-gray-100" id="step3Icon">
+                        <i class="fas fa-cog text-gray-400 hidden" id="step3Spinner"></i>
+                        <i class="fas fa-check text-green-500 hidden" id="step3Check"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-gray-900">Generando diagnóstico</p>
+                        <p class="text-xs text-gray-500" id="step3Status">En espera...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+// Función para confirmar eliminación de imagen
+function confirmDelete() {
+    return confirm("¿Estás seguro de que deseas eliminar esta imagen? Esta acción no se puede deshacer.");
+}
+
+// Función para iniciar análisis con IA con animación mejorada
+function iniciarAnalisisIA() {
+    // Referencias a elementos del DOM
+    const modal = document.getElementById('loadingModal');
+    const modalContent = document.getElementById('modalContent');
+    const progressBar = document.getElementById('progressBar');
+    const progressPercent = document.getElementById('progressPercent');
+    const loadingText = document.getElementById('loadingText');
+    const btnVerConIA = document.getElementById('btnVerConIA');
+    
+    // Deshabilitar el botón
+    btnVerConIA.disabled = true;
+    btnVerConIA.classList.add('opacity-50', 'cursor-not-allowed');
+    btnVerConIA.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Procesando...';
+    
+    // Mostrar modal con animación
+    modal.classList.remove('hidden');
+    
+    // Animar entrada del modal
+    setTimeout(() => {
+        modalContent.classList.remove('opacity-0', 'scale-95');
+        modalContent.classList.add('opacity-100', 'scale-100');
+    }, 10);
+    
+    // Configuración de pasos del análisis
+    const steps = [
+        { 
+            percent: 30, 
+            text: 'Cargando modelo de inteligencia artificial...', 
+            delay: 1200,
+            update: () => {
+                document.getElementById('step1Status').textContent = 'Completado';
+                document.getElementById('step1Spinner').classList.add('hidden');
+                document.getElementById('step1Check').classList.remove('hidden');
+                document.getElementById('step2Spinner').classList.remove('hidden');
+                document.getElementById('step2Status').textContent = 'En proceso...';
+            }
+        },
+        { 
+            percent: 60, 
+            text: 'Analizando estructuras y patologias dentales...', 
+            delay: 1500,
+            update: () => {
+                document.getElementById('step2Status').textContent = 'Completado';
+                document.getElementById('step2Spinner').classList.add('hidden');
+                document.getElementById('step2Check').classList.remove('hidden');
+                document.getElementById('step3Spinner').classList.remove('hidden');
+                document.getElementById('step3Status').textContent = 'En proceso...';
+            }
+        },
+        { 
+            percent: 90, 
+            text: 'Generando diagnóstico final...', 
+            delay: 1800,
+            update: () => {
+                document.getElementById('step3Status').textContent = 'Completado';
+                document.getElementById('step3Spinner').classList.add('hidden');
+                document.getElementById('step3Check').classList.remove('hidden');
+            }
+        }
+    ];
+    
+    let currentStep = 0;
+    let progress = 0;
+    
+    // Función para animar suavemente el progreso
+    const animateProgress = () => {
+        // Incremento de progreso suave
+        if (progress < 100) {
+            // Llegar al siguiente hito
+            const targetProgress = currentStep < steps.length ? steps[currentStep].percent : 100;
+            
+            // Si alcanzamos el hito actual
+            if (progress >= targetProgress && currentStep < steps.length) {
+                // Actualizar texto y UI
+                loadingText.textContent = steps[currentStep].text;
+                steps[currentStep].update();
+                
+                // Ir al siguiente paso
+                currentStep++;
+            }
+            
+            // Incrementar progreso
+            if (progress < (currentStep < steps.length ? steps[currentStep].percent : 100)) {
+                progress += 0.5;
+                progressBar.style.width = `${progress}%`;
+                progressPercent.textContent = `${Math.round(progress)}%`;
+                requestAnimationFrame(animateProgress);
+            } else {
+                // Esperar un momento antes de continuar con el próximo paso
+                setTimeout(() => {
+                    requestAnimationFrame(animateProgress);
+                }, currentStep < steps.length ? steps[currentStep-1].delay : 0);
+            }
+        } else {
+            // Completado, redirigir
+            setTimeout(() => {
+                window.location.href = '{{ url_for("main.ia_caries_result", image_id=image.mod_img_id, paciente_id=paciente_id) }}';
+            }, 500);
+        }
+    };
+    
+    // Iniciar animación
+    requestAnimationFrame(animateProgress);
+}
+</script>
 </div>
 {% endblock %}
